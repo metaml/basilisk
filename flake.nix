@@ -18,7 +18,7 @@
             bashInteractive
             cmake
             cmakeCurses
-            #conan
+            conan
             coreutils
             findutils
             gcc
@@ -50,9 +50,9 @@
           shellHook = ''
             export SHELL=$BASH
             export LANG=en_US.UTF-8
-            export PS1="basilisk|$PS1"
-            virtualenv basilisk
-            source basilisk/bin/activate
+            export PS1="basi|$PS1"
+            #virtualenv basilisk
+            #source basilisk/bin/activate
           '';
         };
 
