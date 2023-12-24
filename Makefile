@@ -3,8 +3,8 @@
 export SHELL := $(shell type --path bash)
 export PYTHONPATH := $(shell pwd)/dist3:$(shell pwd)/src:${PYTHONPATH}
 
-#init: ## pip install conan
-#	pip install conan==1.59.0
+init: ## pip install conan
+	pip install conan==1.59.0
 
 build: ## build basilisk
 	python3 conanfile.py
