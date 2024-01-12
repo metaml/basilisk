@@ -50,6 +50,7 @@
           shellHook = ''
             export SHELL=$BASH
             export LANG=en_US.UTF-8
+            export PYTHONPATH=$PWD/dist3:$PYTHONPATH
             export PS1="nix|$PS1"
             python3 -m venv .venv
             source .venv/bin/activate
