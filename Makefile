@@ -19,9 +19,10 @@ test-src: ## test src
 	cd src && pytest --verbosity=1 --numprocesses=0
 
 clean: ## clean
-	rm -rf dist3
+	find . -name \*~ | xargs rm -f
 
 clobber: clean ## clobber
+	rm -rf dist3
 	rm -rf ~/.conan
 
 deps: install-xcode install-conan ## install deps (run this first)
