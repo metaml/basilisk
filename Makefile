@@ -6,8 +6,9 @@ ifeq ($(shell uname -s),Darwin)
 export LD = /usr/bin/clang
 endif
 
+# default settings: https://hanspeterschaub.info/basilisk/Install/installBuild.html
 build: ## build basilisk
-	python3 conanfile.py
+	python3 conanfile.py --clean
 
 test: test-dist3 test-src ## test all
 
@@ -32,6 +33,9 @@ install-xcode: ## install xcode developer tools
 
 install-conan: ## install conan
 	pip3 install wheel 'conan<2.0'
+
+nix-build: ## nix build
+	nix build --impure --verbose --option sandbox relaxed
 
 help: ## help
 	-@grep --extended-regexp '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \

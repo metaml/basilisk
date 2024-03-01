@@ -12,6 +12,7 @@
         name = "basilisk";
         version = "0.1.0";
         pkgs = nixpkgs.legacyPackages.${system};
+        nixConfig.sandbox = false; # "relaxed";           
       in {
         packages.${name} = with import nixpkgs { inherit system; };
           stdenv.mkDerivation {
@@ -46,7 +47,7 @@
             ];
 
             buildPhase = ''
-              export HOME=$TMP
+              export HOME=$out
               export SHELL=$BASH
               export LANG=en_US.UTF-8
               export PYTHONPATH=$PWD/dist3:$PYTHONPATH
@@ -57,7 +58,7 @@
               make build                                          
             '';
             installPhase = ''
-              export HOME=$TMP
+              tree $out
             '';
           };
         packages.default = self.packages.${system}.${name};
