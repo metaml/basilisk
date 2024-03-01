@@ -24,9 +24,23 @@
 
             buildInputs = with pkgs; [
               cmake
+              cmakeCurses
+              #conan
+              coreutils
+              cppzmq
+              eigen
+              jasper
+              findutils
               gnugrep
               gnumake
               gnused
+              libjpeg
+              libpng
+              libwebp
+              opencv
+              pcre
+              pkg-config
+              protobuf
               python3
               python3.pkgs.colorama
               python3.pkgs.matplotlib
@@ -43,6 +57,11 @@
               python3.pkgs.urllib3
               python3.pkgs.virtualenv
               python3.pkgs.wheel
+              sourceHighlight
+              swig4
+              watchexec
+              xz
+              zeromq
               swig4
             ];
 
@@ -58,7 +77,7 @@
               make build                                          
             '';
             installPhase = ''
-              tree $out
+              ls -l $out
             '';
           };
         packages.default = self.packages.${system}.${name};
@@ -71,11 +90,21 @@
             cmakeCurses
             #conan
             coreutils
+            cppzmq
+            eigen
+            jasper
             findutils
             git
             gnugrep
             gnumake
             gnused
+            libjpeg
+            libpng
+            libwebp
+            opencv
+            pcre
+            pkg-config
+            protobuf
             python3
             python3.pkgs.colorama
             python3.pkgs.matplotlib
@@ -95,6 +124,8 @@
             sourceHighlight
             swig4
             watchexec
+            xz
+            zeromq
             zlib
           ];
 

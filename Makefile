@@ -8,7 +8,7 @@ endif
 
 # default settings: https://hanspeterschaub.info/basilisk/Install/installBuild.html
 build: ## build basilisk
-	python3 conanfile.py --clean
+	python3 conanfile.py --clean #--opNav True
 
 test: test-dist3 test-src ## test all
 
