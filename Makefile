@@ -2,7 +2,9 @@
 
 export SHELL := $(shell type --path bash)
 export PYTHONPATH := $(shell pwd)/dist3:$(shell pwd)/src:${PYTHONPATH}
-ifeq ($(shell uname -s),Darwin)
+
+OS = $(shell uname -s)
+ifeq ($(OS),Darwin)
 export LD = /usr/bin/clang
 endif
 
@@ -41,5 +43,8 @@ help: ## help
 	-@grep --extended-regexp '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
 	| sed 's/^Makefile://1' \
 	| awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-18s\033[0m %s\n", $$1, $$2}'
-	xcrun --find clang
-	xcrun --find ld
+	@if [ "$$(OS)" = "Darwin" ]; then \
+		echo "Darwin dependecies:"; \
+		xcrun --find clang; \
+		xcrun --find ld; \
+	fi
