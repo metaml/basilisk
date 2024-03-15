@@ -39,11 +39,20 @@ install-conan: ## install conan
 nix-build: ## nix build
 	nix build --impure --verbose --option sandbox relaxed
 
+image: ## docker image
+	nix build --impure --verbose --option sandbox relaxed .#docker
+
+image-load: ## laod docker image
+	docker load < result
+
+image-run: ## laod docker image
+	docker run --interactive --tty basilisk
+
 help: ## help
 	-@grep --extended-regexp '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
 	| sed 's/^Makefile://1' \
 	| awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-18s\033[0m %s\n", $$1, $$2}'
-	@if [ "$$(OS)" = "Darwin" ]; then \
+	@if [ "Darwin" = "$(OS)" ]; then \
 		echo "Darwin dependecies:"; \
 		xcrun --find clang; \
 		xcrun --find ld; \

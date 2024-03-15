@@ -82,6 +82,37 @@
           };
         packages.default = self.packages.${system}.${name};
         defaultPackage = self.packages.${system}.default;
+
+        packages.docker = pkgs.dockerTools.buildImage {
+          name = "${name}";
+          tag = "latest";
+          created = "now";
+
+          copyToRoot = pkgs.buildEnv {
+            name = "${name}";
+            paths = with pkgs; [
+              bashInteractive              
+              cacert
+              coreutils
+              findutils
+              gnugrep
+              python3              
+              self.defaultPackage.${system}
+            ];
+          };
+
+          config = {
+            WorkingDir = "/";
+            Env = [
+              "NIX_SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
+              "SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
+              "SYSTEM_CERTIFICATE_PATH=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
+            ];
+            EntryPoint = [ "${pkgs.bashInteractive}/bin/bash" ];
+            # CMD = [ "change-event" ]; # name of lambda handler
+          };
+        };
+
         
         devShells.default = pkgs.mkShell {
           buildInputs = with pkgs; [
