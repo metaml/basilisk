@@ -16,12 +16,15 @@
       in {
         packages.${name} = with import nixpkgs { inherit system; };
           stdenv.mkDerivation {
-            __noChroot = true;
+            src = lib.cleanSource ./.; # self;
             name = "${name}";
-            src = self;
             version = "${version}";
-            dontUseCmakeConfigure = true;
 
+            __noChroot = true;
+            dontUseCmakeConfigure = true;
+            dontPatchELF = true;
+            dontFixup = true;
+              
             buildInputs = with pkgs; [
               cmake
               cmakeCurses
@@ -59,25 +62,24 @@
               python3.pkgs.wheel
               sourceHighlight
               swig4
+              rsync
               watchexec
               xz
               zeromq
-              swig4
             ];
 
             buildPhase = ''
-              export HOME=$out
+              export HOME=/tmp
               export SHELL=$BASH
               export LANG=en_US.UTF-8
-              export PYTHONPATH=$PWD/dist3:$PYTHONPATH
-
               python3 -m venv .venv
               source .venv/bin/activate
               make install-conan
-              make build                                          
+              make build
             '';
             installPhase = ''
-              ls -l $out
+              mkdir -p $out \
+              && cp --archive --preserve --dereference dist3/* $out
             '';
           };
         packages.default = self.packages.${system}.${name};
@@ -90,13 +92,28 @@
 
           copyToRoot = pkgs.buildEnv {
             name = "${name}";
+            pathsToLink = [ "/lib" ];
             paths = with pkgs; [
               bashInteractive              
               cacert
               coreutils
               findutils
               gnugrep
-              python3              
+              python3
+              python3.pkgs.colorama
+              python3.pkgs.matplotlib
+              python3.pkgs.numpy
+              python3.pkgs.pandas
+              python3.pkgs.parse
+              python3.pkgs.pillow
+              python3.pkgs.pip
+              python3.pkgs.pytest
+              python3.pkgs.pytest-xdist
+              python3.pkgs.setuptools
+              python3.pkgs.tkinter
+              python3.pkgs.tqdm
+              python3.pkgs.urllib3
+              python3.pkgs.virtualenv
               self.defaultPackage.${system}
             ];
           };
@@ -107,6 +124,7 @@
               "NIX_SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
               "SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
               "SYSTEM_CERTIFICATE_PATH=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
+              #"PYTHONPATH=/lib/${name}:$PYTHONPATH"
             ];
             EntryPoint = [ "${pkgs.bashInteractive}/bin/bash" ];
             # CMD = [ "change-event" ]; # name of lambda handler

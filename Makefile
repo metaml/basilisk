@@ -24,6 +24,7 @@ test-src: ## test src
 clean: ## clean
 	find . -name \*~ | xargs rm -f
 
+# ~/.conan is a source of errors that lead to strange errors; remove it when that happens
 clobber: clean ## clobber
 	rm -rf dist3
 	rm -rf ~/.conan
