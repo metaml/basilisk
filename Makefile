@@ -47,7 +47,7 @@ image-load: ## laod docker image
 	docker load < result
 
 image-run: ## laod docker image
-	docker run --interactive --tty basilisk
+	docker run --name=basilisk --interactive --tty --volume ./examples:/examples basilisk
 
 help: ## help
 	-@grep --extended-regexp '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
