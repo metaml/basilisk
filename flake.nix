@@ -83,7 +83,7 @@
 
             installPhase = ''
               mkdir -p $out
-              cp --archive --preserve --dereference dist3/* $out
+              cp --archive --preserve --dereference dist3/* $out/.
             '';
           };
 
@@ -101,6 +101,7 @@
               coreutils
               findutils
               gnugrep
+              gnused
               python3
               python3.pkgs.colorama
               python3.pkgs.matplotlib
