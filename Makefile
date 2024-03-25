@@ -31,17 +31,20 @@ clobber: clean ## clobber
 
 deps: install-xcode install-conan ## install deps (run this first)
 
-install-xcode: ## install xcode developer tools
+xcode-install: ## install xcode developer tools
 	-@sudo xcode-select --install
 
-install-conan: ## install conan
+conan-install: ## install conan
 	pip3 install wheel 'conan<2.0'
 
 nix-build: ## nix build
 	nix build --impure --verbose --option sandbox relaxed
 
+nix-clean:
+	nix-collect-garbage --delete-old
+
 image: ## docker image
-	nix build --impure --verbose --option sandbox relaxed .#docker
+	nix build --show-trace --impure --verbose --option sandbox relaxed .#docker
 
 image-load: ## laod docker image
 	docker load < result

@@ -14,6 +14,9 @@
         pkgs = nixpkgs.legacyPackages.${system};
         nixConfig.sandbox = false; # "relaxed";           
       in {
+        packages.default = self.packages.${system}.${name};
+        defaultPackage = self.packages.${system}.${name};
+        
         packages.${name} = with import nixpkgs { inherit system; };
           stdenv.mkDerivation {
             src = lib.cleanSource ./.; # self;
@@ -22,7 +25,7 @@
 
             __noChroot = true;
             dontUseCmakeConfigure = true;
-            dontPatchELF = true;
+            dontPatchELF = false;
             dontFixup = true;
               
             buildInputs = with pkgs; [
@@ -74,27 +77,26 @@
               export LANG=en_US.UTF-8
               python3 -m venv .venv
               source .venv/bin/activate
-              make install-conan
+              make conan-install
               make build
             '';
+
             installPhase = ''
-              mkdir -p $out \
-              && cp --archive --preserve --dereference dist3/* $out
+              mkdir -p $out
+              cp --archive --preserve --dereference dist3/* $out
             '';
           };
-        packages.default = self.packages.${system}.${name};
-        defaultPackage = self.packages.${system}.default;
 
         packages.docker = pkgs.dockerTools.buildImage {
-          name = "${name}";
+          name = "basilisk";
           tag = "latest";
           created = "now";
 
           copyToRoot = pkgs.buildEnv {
             name = "${name}";
-            pathsToLink = [ "/lib" ];
             paths = with pkgs; [
-              bashInteractive              
+              self.packages.${system}.${name}
+              bashInteractive
               cacert
               coreutils
               findutils
@@ -114,8 +116,8 @@
               python3.pkgs.tqdm
               python3.pkgs.urllib3
               python3.pkgs.virtualenv
-              self.defaultPackage.${system}
             ];
+            pathsToLink = [ "/" "/bin" "/etc" ];
           };
 
           config = {
