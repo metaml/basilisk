@@ -15,7 +15,6 @@
         nixConfig.sandbox = false; # "relaxed";           
       in {
         packages.default = self.packages.${system}.${name};
-        defaultPackage = self.packages.${system}.${name};
         
         packages.${name} = with import nixpkgs { inherit system; };
           stdenv.mkDerivation {
@@ -95,7 +94,8 @@
           copyToRoot = pkgs.buildEnv {
             name = "${name}";
             paths = with pkgs; [
-              self.packages.${system}.${name}
+              # self.packages.${system}.${name}
+              self.packages.default
               bashInteractive
               cacert
               coreutils
