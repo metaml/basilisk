@@ -52,6 +52,20 @@ image-load: ## laod docker image
 image-run: ## laod docker image
 	docker run --name=basilisk --interactive --tty --volume ./examples:/examples basilisk:latest
 
+# login to as slacket@gmail.com
+image-push: image-load ## push image to docker hub
+	docker tag basilisk:latest topos/basilisk:latest
+	docker push topos/basilisk:latest
+
+# in skunk-aws "make aws-sso" 
+image-push-ecr: image-load ## push image to aws ecr
+	docker tag basilisk:latest 412693361451.dkr.ecr.us-east-1.amazonaws.com/basilisk:latest
+	docker push 412693361451.dkr.ecr.us-east-1.amazonaws.com/basilisk:latest
+
+docker-login: ## authenticate docker clien to AWS
+	aws ecr get-login-password --region us-east-1 \
+	| docker login --username AWS --password-stdin 412693361451.dkr.ecr.us-east-1.amazonaws.com
+
 help: ## help
 	-@grep --extended-regexp '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
 	| sed 's/^Makefile://1' \

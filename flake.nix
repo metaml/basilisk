@@ -81,8 +81,9 @@
             '';
 
             installPhase = ''
-              mkdir -p $out
+              mkdir -p $out/bin
               cp --archive --preserve --dereference dist3/* $out/.
+              cp bexec.sh $out/bin
             '';
           };
 
@@ -94,8 +95,7 @@
           copyToRoot = pkgs.buildEnv {
             name = "${name}";
             paths = with pkgs; [
-              # self.packages.${system}.${name}
-              self.packages.default
+              self.packages.${system}.${name}
               bashInteractive
               cacert
               coreutils
